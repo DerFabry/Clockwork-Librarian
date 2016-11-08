@@ -4,7 +4,6 @@ Created on 11.04.2016
 @author: Stephan
 '''
 import cv2
-#also test
 # Camera 0 is the integrated web cam on my netbook
 camera_port = 0
  

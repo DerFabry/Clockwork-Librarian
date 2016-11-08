@@ -13,7 +13,6 @@ Da bisher auf einem Externen Rechner ohne Webcam programmiert wurde, wird eine A
 RaspberryPi hier eingeladen. später auf dem Zielgrät durch den Code in Cam.py ersetzen
 '''
 
-#Test2
 
 filename = "01_image.jpg"
 cardsizeX = 1000
