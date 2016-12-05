@@ -13,8 +13,9 @@ Da bisher auf einem Externen Rechner ohne Webcam programmiert wurde, wird eine A
 RaspberryPi hier eingeladen. später auf dem Zielgrät durch den Code in Cam.py ersetzen
 '''
 
-
-filename = "01_image.jpg"
+inputfolder="input/"
+outputfolder="output/"
+filename = inputfolder+"01_image.jpg"
 cardsizeX = 1000
 cardsizeY = 1397
 im = cv2.imread(filename)
@@ -23,18 +24,18 @@ print("Bild eingelesen")
 #Bild in schwarzweiß umwandeln, um aus 3-kanaliger pixelinformation einen kanal zu machen
 
 gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
-cv2.imwrite("02_gray.jpg", gray)
+cv2.imwrite(outputfolder+"02_gray.jpg", gray)
 print("in Schwarzweiß umgewandelt")
 #Gaußscher weichzeichner um bildflimmern zu vermeiden, Gauß und nicht Mean, weil Gauß due bessere Kantenerhaltung hat
 
 blur = cv2.bilateralFilter(gray,9,75,75)
 
-cv2.imwrite("03_blur.jpg", blur)
+cv2.imwrite(outputfolder+"03_blur.jpg", blur)
 print("Weichzeichner übertragen")
 #Threshholding
 
 thresh = cv2.adaptiveThreshold(blur, 255, 1, 1, 19, 1)
-cv2.imwrite("04_thresh.jpg", thresh)
+cv2.imwrite(outputfolder+"04_thresh.jpg", thresh)
 print("Thresholing")
 #findContours
 
@@ -42,11 +43,11 @@ kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(7,7))
 
 opening = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
 
-cv2.imwrite("05_opened.jpg", opening)
+cv2.imwrite(outputfolder+"05_opened.jpg", opening)
 
 dilation = cv2.dilate(opening, kernel,iterations = 3)
 
-cv2.imwrite("06_dilated.jpg", dilation)
+cv2.imwrite(outputfolder+"06_dilated.jpg", dilation)
 
 
 _, contours , hierarchy = cv2.findContours(opening, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -78,7 +79,7 @@ cv2.drawContours(im2, [cnt], 0, (0,0,0), 2)
 #Das errechnete Viereck in weiß
 cv2.drawContours(im2, [approx], 0, (255,255,255), 2)
 
-cv2.imwrite('07_contours.jpg', im2)
+cv2.imwrite(outputfolder+'07_contours.jpg', im2)
 print("konturen ins buld eingezeichnet")
 #es muss ein weiteres Array erstellt werden, in dem das Ergebnis der Perspektivischen Verzerrung zwischengespeichert werden kann
 
@@ -93,6 +94,6 @@ print(transform)
 
 warp = cv2.warpPerspective(im, transform, (cardsizeX,cardsizeY))
 warpDilation = cv2.warpPerspective(dilation, transform, (cardsizeX,cardsizeY))
-cv2.imwrite('08_warp.jpg', warp)
-cv2.imwrite("09_openwarp.jpg", warpDilation)
+cv2.imwrite(outputfolder+"08_warp.jpg", warp)
+cv2.imwrite(outputfolder+"09_openwarp.jpg", warpDilation)
 print('DONE!')
